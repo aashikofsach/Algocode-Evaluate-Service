@@ -1,4 +1,6 @@
-import {Job} from "bullmq";
+import type {Job} from "bullmq";
+
+// Job is at least type here
 
 export interface IJob{
     name : string,
