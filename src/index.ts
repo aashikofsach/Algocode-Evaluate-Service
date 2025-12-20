@@ -19,10 +19,17 @@ app.listen(serverConfig.PORT, () => {
   SampleWorker("SampleQueue");
 
   sampleQueueProducer('SampleJob', {
+    name : "Aaditya",
+    company : "Microsoft",
+    position : "SDE-2 L60",
+    location : "Remote"
+    
+  },2);
+  sampleQueueProducer('SampleJob', {
     name : "Aashish",
     company : "Google",
     position : "SDE-2 L60",
     location : "Remote || Noida || Banglore"
     
-  });
+  },1);
 });
