@@ -29,6 +29,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@bull-board/express": "^6.15.0",
     "@types/redis": "^4.0.10",
     "bullmq": "^5.66.1",
     "concurrently": "^9.2.1",
