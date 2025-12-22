@@ -1,9 +1,9 @@
 import type { NextFunction , Request , Response} from "express";
 import type { ZodSchema } from "zod";
 
-import type { createSubmissionDto } from "../dtos/createSubmissionDto.js";
+// import type { createSubmissionDto } from "../dtos/createSubmissionDto.js";
 
-export const validateCreateSubmissionDto = (schema : ZodSchema<createSubmissionDto>)=> (req : Request , res : Response , next : NextFunction) =>{
+export const validator = (schema : ZodSchema<any>)=> (req : Request , res : Response , next : NextFunction) =>{
 
     try {
         schema.parse({...req.body});
@@ -13,7 +13,10 @@ export const validateCreateSubmissionDto = (schema : ZodSchema<createSubmissionD
     } catch (error) {
         console.log(error);
         return res.status(400).json({
-            message : "Bad Request"
+            success : false ,
+            message : "Invalid request params received",
+            data : {} ,
+            error : error 
         });
         
     }
