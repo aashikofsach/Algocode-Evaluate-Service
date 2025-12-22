@@ -1,5 +1,5 @@
 import type { NextFunction , Request , Response} from "express";
-import { ZodSchema } from "zod/v3";
+import type { ZodSchema } from "zod";
 
 import type { createSubmissionDto } from "../dtos/createSubmissionDto.js";
 
