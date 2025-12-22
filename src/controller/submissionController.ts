@@ -1,6 +1,6 @@
 import type { Request , Response } from "express";
 
-import type { createSubmissionDto } from "../dtos/createSubmissionDto.js";
+import type { createSubmissionDto } from "../dtos/zodValidator.js";
 
 export function addSubmission(req : Request , res : Response)
 {

@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { addSubmission } from '../../controller/submissionController.js';
-import { createSubmissionZodSchema } from '../../dtos/createSubmissionDto.js';
+import { createSubmissionZodSchema } from '../../dtos/zodValidator.js';
 import { validator } from '../../validator/createSubmissionValidator.js';
 
 
