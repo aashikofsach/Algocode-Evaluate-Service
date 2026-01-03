@@ -4,7 +4,8 @@ import express from "express";
 
 import bullBoardAdapter from "./config/bullBoardConfig.js";
 import serverConfig from "./config/serverConfig.js";
-import sampleQueueProducer from "./producer/sampleQueueProducer.js";
+import runPython from "./containers/runPythonDocker.js";
+// import sampleQueueProducer from "./producer/sampleQueueProducer.js";
 import apiRouter from "./router/index.js";
 import SampleWorker from "./workers/sampleWorker.js";
 const app: Express = express();
@@ -27,18 +28,25 @@ app.listen(serverConfig.PORT, () => {
 
   SampleWorker("SampleQueue");
 
-  sampleQueueProducer('SampleJob', {
-    name : "Aaditya",
-    company : "Microsoft",
-    position : "SDE-2 L60",
-    location : "Remote"
+
+  // sampleQueueProducer('SampleJob', {
+  //   name : "Aaditya",
+  //   company : "Microsoft",
+  //   position : "SDE-2 L60",
+  //   location : "Remote"
     
-  },2);
-  sampleQueueProducer('SampleJob', {
-    name : "Aashish",
-    company : "Google",
-    position : "SDE-2 L60",
-    location : "Remote || Noida || Banglore"
+  // },2);
+  // sampleQueueProducer('SampleJob', {
+  //   name : "Aashish",
+  //   company : "Google",
+  //   position : "SDE-2 L60",
+  //   location : "Remote || Noida || Banglore"
     
-  },1);
+  // },1);
+
+  // const code = `prit("hello Bhai")`;
+  const code = `x = input()
+print("value of x is ", x)`;
+
+runPython(code , "100");
 });

@@ -30,10 +30,12 @@
   },
   "dependencies": {
     "@bull-board/express": "^6.15.0",
+    "@types/dockerode": "^3.3.47",
     "@types/redis": "^4.0.10",
     "body-parser": "^2.2.1",
     "bullmq": "^5.66.1",
     "concurrently": "^9.2.1",
+    "dockerode": "^4.0.9",
     "dotenv": "^17.2.3",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "express": "^5.2.1",
