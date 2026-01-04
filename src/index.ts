@@ -67,19 +67,40 @@ app.listen(serverConfig.PORT, () => {
 
   // `;
 
+  //frontend send this below code 
+  const userCode = `
+
+class Solution{
+public:
+vector<int> permute()
+{
+  vector<int> v;
+  v.push_back(10);
+  return v ;
+}
+
+};
+
+`;
+
   const code = `
 #include <iostream>
+#include <vector>
 using namespace std;
 
+${userCode}
 int main()
 {
-int x ;
-cin>>x;
-cout<<"value of x is "<<x<<endl;
-for(int i=0 ; i<x ;i++)
-{
-  cout<<i<< " ";
-}
+  Solution s;
+  vector<int> result = s.permute() ;
+  for(int x : result)
+  {
+  cout<<x<<" ";
+  }
+  cout<<endl;
+
+  return 0 ;
+
 }
 `;
 
