@@ -9,7 +9,11 @@ import serverConfig from "./config/serverConfig.js";
 // import sampleQueueProducer from "./producer/sampleQueueProducer.js";
 import apiRouter from "./router/index.js";
 import SampleWorker from "./workers/sampleWorker.js";
-import runCpp from "./containers/runCpp.js";
+// import runCpp from "./containers/runCpp.js";
+import SubmissionWorker from "./workers/submissionWorker.js";
+import { submission_queue } from "./utils/constants.js";
+
+import submissionQueueProducer from "./producer/submissionQueueProducer.js";
 const app: Express = express();
 
 app.use(bodyParser.urlencoded());
@@ -29,6 +33,9 @@ app.listen(serverConfig.PORT, () => {
   );
 
   SampleWorker("SampleQueue");
+  SubmissionWorker(submission_queue)
+
+
 
   // sampleQueueProducer('SampleJob', {
   //   name : "Aaditya",
@@ -104,9 +111,16 @@ int main()
 }
 `;
 
-  const inputCase = `100`;
+  const inputCase = `100`
 
-  // runPython(code , "100");
-  // runJava(code, inputCase);
-  runCpp(code, inputCase);
+//   // runPython(code , "100");
+//   // runJava(code, inputCase);
+//   runCpp(code, inputCase);
+
+
+  submissionQueueProducer({"1234" : {
+    language : "CPP",
+    inputCase,
+    code
+  }})
 });

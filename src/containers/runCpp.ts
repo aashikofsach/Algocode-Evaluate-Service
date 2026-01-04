@@ -41,7 +41,7 @@ const cppDockerContainer = await createContainer(CPP_IMAGE, [
   });
 
   // why we use await here , have to see it 
-  await new Promise((res)=>{
+  const response = await new Promise((res)=>{
     loggerStream.on("end",()=>{
     console.log(rawBuffer);
     const completeBuffer = Buffer.concat(rawBuffer);
@@ -49,13 +49,15 @@ const cppDockerContainer = await createContainer(CPP_IMAGE, [
     const decodedStream = decodeDockerStream(completeBuffer);
     console.log(decodedStream);
     console.log(decodedStream.stdout);
-    res(decodeDockerStream);
+    res(decodedStream);
   });
 
   });
 
   await cppDockerContainer.remove();
   // return pythonDockerContainer;  
+
+  return response;
 }
 
 export default runCpp;
