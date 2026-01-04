@@ -1,12 +1,12 @@
 // import Docker from "dockerode";
 
 // import type { TestCases } from "../types/testCases.js";
-import { PYTHON_IMAGE } from "../utils/constants.js";
+import { CPP_IMAGE } from "../utils/constants.js";
 import createContainer from "./containerFactory.js";
 import decodeDockerStream from "./dockerHelper.js";
 import pullImage from "./pullImage.js";
 
-async function runPython(code: string , inputTestCase : string) {
+async function runCpp(code: string , inputTestCase : string) {
   const rawBuffer :Buffer[] = [];
 //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
 //     "python3",
@@ -16,20 +16,20 @@ async function runPython(code: string , inputTestCase : string) {
 //   ]);
 
 const runCommand = `
-  echo "${code.replace(/"/g, '\\"')}" > test.py &&
-  echo "${inputTestCase.replace(/"/g, '\\"')}" | python3 test.py
+  echo "${code.replace(/"/g, '\\"')}" > main.cpp && g++ main.cpp -o main
+  echo "${inputTestCase.replace(/"/g, '\\"')}" | ./main
 `;
 // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, ['echo', code , '> test.py && echo' ,inputTestCase , "|", "python3 test.py"
    
-await pullImage(PYTHON_IMAGE);
-const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
+await pullImage(CPP_IMAGE);
+const cppDockerContainer = await createContainer(CPP_IMAGE, [
   "/bin/sh",
   "-c",
   runCommand
 ]);
-  await pythonDockerContainer.start();
+  await cppDockerContainer.start();
 
-  const loggerStream = await pythonDockerContainer.logs({
+  const loggerStream = await cppDockerContainer.logs({
     stderr: true,
     stdout: true,
     follow: true,
@@ -48,13 +48,14 @@ const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
 
     const decodedStream = decodeDockerStream(completeBuffer);
     console.log(decodedStream);
+    console.log(decodedStream.stdout);
     res(decodeDockerStream);
   });
 
   });
 
-  await pythonDockerContainer.remove();
+  await cppDockerContainer.remove();
   // return pythonDockerContainer;  
 }
 
-export default runPython;
+export default runCpp;
