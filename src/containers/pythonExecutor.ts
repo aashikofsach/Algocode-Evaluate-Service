@@ -1,15 +1,20 @@
 // import Docker from "dockerode";
 
 // import type { TestCases } from "../types/testCases.js";
+
 import type CodeExecutorStrategy from "../types/CodeExecutorStrategy.js";
-import type DockerStreamOutput from "../types/dockerStreamOutput.js";
+import type { ExecutionResponse } from "../types/CodeExecutorStrategy.js";
+// import type DockerStreamOutput from "../types/dockerStreamOutput.js";
 import { PYTHON_IMAGE } from "../utils/constants.js";
 import createContainer from "./containerFactory.js";
 import decodeDockerStream from "./dockerHelper.js";
 import pullImage from "./pullImage.js";
 
 class PythonExecutor implements CodeExecutorStrategy {
-  async execute(code: string, inputTestCase: string): string {
+  async execute(
+    code: string,
+    inputTestCase: string,
+  ): Promise<ExecutionResponse> {
     const rawBuffer: Buffer[] = [];
     //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
     //     "python3",
@@ -44,16 +49,29 @@ class PythonExecutor implements CodeExecutorStrategy {
     });
 
     // why we use await here , have to see it
-    const codeResponse = await this.fetchDecodedStream(loggerStream,rawBuffer)
-    
-    
-    await pythonDockerContainer.remove();
+
+    try {
+      const codeResponse: string = await this.fetchDecodedStream(
+        loggerStream,
+        rawBuffer,
+      );
+
+      return { output: codeResponse, status: "COMPLETED" };
+    } catch (error) {
+      return { output: error as string, status: "ERROR" };
+    } finally {
+      await pythonDockerContainer.remove();
+    }
+
     // return pythonDockerContainer;
 
-    return codeResponse;
+    // return codeResponse;
   }
 
-  fetchDecodedStream(loggerStream : NodeJS.ReadableStream, rawBuffer : Buffer[]) {
+  fetchDecodedStream(
+    loggerStream: NodeJS.ReadableStream,
+    rawBuffer: Buffer[],
+  ): Promise<string> {
     return new Promise((res, rej) => {
       loggerStream.on("end", () => {
         console.log(rawBuffer);
@@ -61,7 +79,8 @@ class PythonExecutor implements CodeExecutorStrategy {
 
         const decodedStream = decodeDockerStream(completeBuffer);
         console.log(decodedStream);
-        res(decodedStream);
+
+        // res(decodedStream);
         if (decodedStream.stderr) rej(decodedStream.stderr);
         else res(decodedStream.stdout);
       });
