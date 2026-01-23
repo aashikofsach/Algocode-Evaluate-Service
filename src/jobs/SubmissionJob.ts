@@ -12,7 +12,7 @@ export default class SubmissionJob implements IJob {
     this.payload = payload;
     this.name = this.constructor.name;
   }
-   handle = async (job?: Job) => {
+  handle = async (job?: Job) => {
     console.log("Handler of the job called ");
     console.log(this.payload); //this is 1
     if (!job || !this.payload) return;
@@ -22,9 +22,10 @@ export default class SubmissionJob implements IJob {
 
     const key = keys[0]; // now guaranteed string
     const submission = this.payload[key];
+    const codeLanguage = submission.language;
 
-    if (submission.language === "CPP") {
-      const response=await runCpp(submission.code, submission.inputCase);
+    if (codeLanguage === "CPP") {
+      const response = await runCpp(submission.code, submission.inputCase);
       console.log("Evaluated Response is ", response);
     }
   };
