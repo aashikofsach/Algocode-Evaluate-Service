@@ -3,6 +3,7 @@ import type { Job } from "bullmq";
 import runCpp from "../containers/runCpp.js";
 import type { IJob } from "../types/bullMq.JobDefinition.ts";
 import type { SubmissionPayload } from "../types/submissionPayload.js";
+import createExecutor from "../utils/ExecutorFactory.js";
 
 export default class SubmissionJob implements IJob {
   name: string;
@@ -17,16 +18,47 @@ export default class SubmissionJob implements IJob {
     console.log(this.payload); //this is 1
     if (!job || !this.payload) return;
 
-    const keys = Object.keys(this.payload);
-    if (!keys.length) return;
+    // const keys = Object.keys(this.payload);
+    // if (!keys.length) return;
 
-    const key = keys[0]; // now guaranteed string
-    const submission = this.payload[key];
-    const codeLanguage = submission.language;
+    // const key = keys[0]; // now guaranteed string
+    // const submission = this.payload[key];
+    // const codeLanguage = submission.language;
 
-    if (codeLanguage === "CPP") {
-      const response = await runCpp(submission.code, submission.inputCase);
-      console.log("Evaluated Response is ", response);
+    // if (codeLanguage === "CPP") {
+    //   const response = await runCpp(submission.code, submission.inputCase);
+    //   console.log("Evaluated Response is ", response);
+    // }
+    if (job) {
+      const key = Object.keys(this.payload)[0];
+      if (!key) return;
+
+      const submission = this.payload[key];
+      if (!submission) return;
+
+      const {
+        language: codeLanguage,
+        code: code,
+        inputCase: inputTestCase,
+      } = submission;
+      if (!codeLanguage || !code || !inputTestCase) return;
+
+      const strategy = createExecutor(codeLanguage);
+      if (strategy !== null) {
+        const response = await strategy.execute(code, inputTestCase);
+        if(response.status==="COMPLETED")
+        {
+          console.log("Code Executed Successfully");
+          console.log(response);
+
+        }
+        else
+        {
+          console.log("something went wrong with code execution") ;
+          console.log(response);
+
+        }
+      }
     }
   };
   failed = (job?: Job): void => {
