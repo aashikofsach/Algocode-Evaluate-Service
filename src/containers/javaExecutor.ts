@@ -12,7 +12,10 @@ class JavaExecutor implements CodeExecutorStrategy {
   async execute(
     code: string,
     inputTestCase: string,
+    outputTestCase: string,
   ): Promise<ExecutionResponse> {
+    console.log(code, inputTestCase, outputTestCase);
+    console.log("java executor called ");
     const rawBuffer: Buffer[] = [];
     //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
     //     "python3",

@@ -7,9 +7,9 @@ import type CodeExecutorStrategy from "../types/CodeExecutorStrategy.js";
 export default function createExecutor(
   codeLanguage: string,
 ): CodeExecutorStrategy | null {
-  if (codeLanguage === "PYTHON") {
+  if (codeLanguage.toLocaleLowerCase() === "python") {
     return new PythonExecutor();
-  } else if (codeLanguage === "JAVA") {
+  } else if (codeLanguage.toLocaleLowerCase() === "java") {
     return new JavaExecutor();
   } else return null;
 }

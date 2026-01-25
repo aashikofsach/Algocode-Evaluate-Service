@@ -4,16 +4,15 @@ import express from "express";
 
 import bullBoardAdapter from "./config/bullBoardConfig.js";
 import serverConfig from "./config/serverConfig.js";
+// import submissionQueueProducer from "./producer/submissionQueueProducer.js";
 // import runJava from "./containers/runJavaDocker.js";
 // import runPython from "./containers/runPythonDocker.js";
 // import sampleQueueProducer from "./producer/sampleQueueProducer.js";
 import apiRouter from "./router/index.js";
+import { submission_queue } from "./utils/constants.js";
 import SampleWorker from "./workers/sampleWorker.js";
 // import runCpp from "./containers/runCpp.js";
 import SubmissionWorker from "./workers/submissionWorker.js";
-import { submission_queue } from "./utils/constants.js";
-
-import submissionQueueProducer from "./producer/submissionQueueProducer.js";
 const app: Express = express();
 
 app.use(bodyParser.urlencoded());
@@ -29,13 +28,11 @@ app.listen(serverConfig.PORT, () => {
 
   console.log(`server is running  or well  on ${serverConfig.PORT}`);
   console.log(
-    `bull board dashboard running on server : http://localhost:${serverConfig.PORT}/ui`
+    `bull board dashboard running on server : http://localhost:${serverConfig.PORT}/ui`,
   );
 
   SampleWorker("SampleQueue");
-  SubmissionWorker(submission_queue)
-
-
+  SubmissionWorker(submission_queue);
 
   // sampleQueueProducer('SampleJob', {
   //   name : "Aaditya",
@@ -74,53 +71,54 @@ app.listen(serverConfig.PORT, () => {
 
   // `;
 
-  //frontend send this below code 
-  const userCode = `
+  //frontend send this below code
+  //   const userCode = `
 
-class Solution{
-public:
-vector<int> permute()
-{
-  vector<int> v;
-  v.push_back(10);
-  return v ;
-}
+  // class Solution{
+  // public:
+  // vector<int> permute()
+  // {
+  //   vector<int> v;
+  //   v.push_back(10);
+  //   return v ;
+  // }
 
-};
+  // };
 
-`;
+  // `;
 
-  const code = `
-#include <iostream>
-#include <vector>
-using namespace std;
+  //   const code = `
+  // #include <iostream>
+  // #include <vector>
+  // using namespace std;
 
-${userCode}
-int main()
-{
-  Solution s;
-  vector<int> result = s.permute() ;
-  for(int x : result)
-  {
-  cout<<x<<" ";
-  }
-  cout<<endl;
+  // ${userCode}
+  // int main()
+  // {
+  //   Solution s;
+  //   vector<int> result = s.permute() ;
+  //   for(int x : result)
+  //   {
+  //   cout<<x<<" ";
+  //   }
+  //   cout<<endl;
 
-  return 0 ;
+  //   return 0 ;
 
-}
-`;
+  // }
+  // `;
 
-  const inputCase = `100`
+  // const inputCase = `100`
 
-//   // runPython(code , "100");
-//   // runJava(code, inputCase);
-//   runCpp(code, inputCase);
+  //   // runPython(code , "100");
+  //   // runJava(code, inputCase);
+  //   runCpp(code, inputCase);
 
-
-  submissionQueueProducer({"1234" : {
-    language : "CPP",
-    inputCase,
-    code
-  }})
+  // submissionQueueProducer({
+  //   "1234": {
+  //     language: "CPP",
+  //     inputCase,
+  //     code,
+  //   },
+  // });
 });

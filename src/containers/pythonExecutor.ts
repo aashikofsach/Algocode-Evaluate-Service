@@ -14,7 +14,10 @@ class PythonExecutor implements CodeExecutorStrategy {
   async execute(
     code: string,
     inputTestCase: string,
+    outputTestCase: string,
   ): Promise<ExecutionResponse> {
+    console.log(code, inputTestCase, outputTestCase);
+
     const rawBuffer: Buffer[] = [];
     //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
     //     "python3",
@@ -54,6 +57,7 @@ class PythonExecutor implements CodeExecutorStrategy {
       const codeResponse: string = await this.fetchDecodedStream(
         loggerStream,
         rawBuffer,
+        
       );
 
       return { output: codeResponse, status: "COMPLETED" };
@@ -88,7 +92,7 @@ class PythonExecutor implements CodeExecutorStrategy {
   }
 }
 
-async function runPython(code: string, inputTestCase: string) {
+// async function runPython(code: string, inputTestCase: string) {
   //   const rawBuffer :Buffer[] = [];
   // //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
   // //     "python3",
@@ -129,6 +133,6 @@ async function runPython(code: string, inputTestCase: string) {
   //   });
   //   await pythonDockerContainer.remove();
   //   // return pythonDockerContainer;
-}
+// }
 
 export default PythonExecutor;
