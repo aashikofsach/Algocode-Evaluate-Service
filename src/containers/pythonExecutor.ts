@@ -57,10 +57,15 @@ class PythonExecutor implements CodeExecutorStrategy {
       const codeResponse: string = await this.fetchDecodedStream(
         loggerStream,
         rawBuffer,
-        
       );
+      // here we are matching the codeResponse wiht output test case
+      if (codeResponse.trim() === outputTestCase.trim()) {
+        return { output: codeResponse, status: "SUCCESS" };
+      } else {
+        return { output: codeResponse, status: "WA" };
+      }
 
-      return { output: codeResponse, status: "COMPLETED" };
+      // return { output: codeResponse, status: "COMPLETED" };
     } catch (error) {
       return { output: error as string, status: "ERROR" };
     } finally {
@@ -93,46 +98,46 @@ class PythonExecutor implements CodeExecutorStrategy {
 }
 
 // async function runPython(code: string, inputTestCase: string) {
-  //   const rawBuffer :Buffer[] = [];
-  // //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
-  // //     "python3",
-  // //     "-c",
-  // //     code,
-  // //     "stty -echo",
-  // //   ]);
-  // const runCommand = `
-  //   echo "${code.replace(/"/g, '\\"')}" > test.py &&
-  //   echo "${inputTestCase.replace(/"/g, '\\"')}" | python3 test.py
-  // `;
-  // // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, ['echo', code , '> test.py && echo' ,inputTestCase , "|", "python3 test.py"
-  // await pullImage(PYTHON_IMAGE);
-  // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
-  //   "/bin/sh",
-  //   "-c",
-  //   runCommand
-  // ]);
-  //   await pythonDockerContainer.start();
-  //   const loggerStream = await pythonDockerContainer.logs({
-  //     stderr: true,
-  //     stdout: true,
-  //     follow: true,
-  //     timestamps: false,
-  //   });
-  //   loggerStream.on("data", (chunk) => {
-  //     rawBuffer.push(chunk);
-  //   });
-  //   // why we use await here , have to see it
-  //   await new Promise((res)=>{
-  //     loggerStream.on("end",()=>{
-  //     console.log(rawBuffer);
-  //     const completeBuffer = Buffer.concat(rawBuffer);
-  //     const decodedStream = decodeDockerStream(completeBuffer);
-  //     console.log(decodedStream);
-  //     res(decodeDockerStream);
-  //   });
-  //   });
-  //   await pythonDockerContainer.remove();
-  //   // return pythonDockerContainer;
+//   const rawBuffer :Buffer[] = [];
+// //   const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
+// //     "python3",
+// //     "-c",
+// //     code,
+// //     "stty -echo",
+// //   ]);
+// const runCommand = `
+//   echo "${code.replace(/"/g, '\\"')}" > test.py &&
+//   echo "${inputTestCase.replace(/"/g, '\\"')}" | python3 test.py
+// `;
+// // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, ['echo', code , '> test.py && echo' ,inputTestCase , "|", "python3 test.py"
+// await pullImage(PYTHON_IMAGE);
+// const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
+//   "/bin/sh",
+//   "-c",
+//   runCommand
+// ]);
+//   await pythonDockerContainer.start();
+//   const loggerStream = await pythonDockerContainer.logs({
+//     stderr: true,
+//     stdout: true,
+//     follow: true,
+//     timestamps: false,
+//   });
+//   loggerStream.on("data", (chunk) => {
+//     rawBuffer.push(chunk);
+//   });
+//   // why we use await here , have to see it
+//   await new Promise((res)=>{
+//     loggerStream.on("end",()=>{
+//     console.log(rawBuffer);
+//     const completeBuffer = Buffer.concat(rawBuffer);
+//     const decodedStream = decodeDockerStream(completeBuffer);
+//     console.log(decodedStream);
+//     res(decodeDockerStream);
+//   });
+//   });
+//   await pythonDockerContainer.remove();
+//   // return pythonDockerContainer;
 // }
 
 export default PythonExecutor;
