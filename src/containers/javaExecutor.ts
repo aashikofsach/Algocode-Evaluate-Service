@@ -57,13 +57,15 @@ class JavaExecutor implements CodeExecutorStrategy {
         rawBuffer,
       );
       if (codeResponse.trim() === outputTestCase.trim()) {
-        return { output: codeResponse, status: "SUCESS" };
+        return { output: codeResponse, status: "SUCCESS" };
       } else {
         return { output: codeResponse, status: "WA" };
       }
 
       // return { output: codeResponse, status: "COMPLETED" };
     } catch (error) {
+      console.log(error,"Error occured ")
+      await javaDockerContainer.kill();
       return { output: error as string, status: "ERROR" };
     } finally {
       await javaDockerContainer.remove();
@@ -77,8 +79,14 @@ class JavaExecutor implements CodeExecutorStrategy {
     rawBuffer: Buffer[],
   ): Promise<string> {
     return new Promise((res, rej) => {
+      const timeout = setTimeout(() => {
+        console.log("Timeout called");
+        rej("TLE");
+        
+      }, 2000);
       loggerStream.on("end", () => {
         console.log(rawBuffer);
+        clearTimeout(timeout)
         const completeBuffer = Buffer.concat(rawBuffer);
 
         const decodedStream = decodeDockerStream(completeBuffer);
