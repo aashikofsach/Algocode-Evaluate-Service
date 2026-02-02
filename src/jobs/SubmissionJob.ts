@@ -77,7 +77,7 @@ export default class SubmissionJob implements IJob {
           outputTestCase,
         );
         console.log("line is 60", response);
-        evaluationQueueProducer({ response });
+        evaluationQueueProducer({ response, userId, submissionId });
         if (response.status === "SUCESS") {
           console.log("Code Executed Successfully");
           console.log(response);
